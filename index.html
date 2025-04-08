@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Registro de casos de simulación ACLS</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<meta content="noindex, nofollow" name="robots"/></head>
+<body class="bg-gray-100 p-4">
+<div class="max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-6">
+<h1 class="text-2xl font-bold text-center mb-2" style="color: #be1520;">Registro de casos de simulación ACLS</h1><p class="text-center text-sm text-gray-600 mb-4">APP creada por Elena Plaza Moreno - Urgencias y Emergencias® - <a class="text-blue-600 underline" href="https://www.urgenciasyemergen.com" target="_blank">www.urgenciasyemergen.com</a></p>
+<!-- Formulario principal -->
+<div id="formularioPrincipal">
+<div class="mb-4">
+<label class="block font-bold">Fecha:</label>
+<input class="w-full border p-2 rounded" id="fecha" type="date"/>
+<label class="block font-bold mt-2">Nombre de alumnos:</label>
+<input class="w-full border p-2 rounded" id="alumnos" type="text"/>
+<label class="block font-bold mt-2">Centro educativo:</label>
+<input class="w-full border p-2 rounded" id="centro" type="text"/>
+<label class="block font-bold mt-2">Curso:</label>
+<input class="w-full border p-2 rounded" id="curso" type="text"/>
+<label class="block font-bold mt-2">Grupo:</label>
+<input class="w-full border p-2 rounded" id="grupo" type="text"/>
+<label class="block font-bold mt-2">Briefing del caso:</label>
+<textarea class="w-full border p-2 rounded" id="briefing"></textarea>
+</div>
+<div class="mb-4 flex space-x-2">
+<button class="w-1/2 bg-black text-white font-bold p-3 rounded" id="btnInicioCaso">▶️ Iniciar caso</button>
+<button class="w-1/2 bg-red-600 text-white font-bold p-3 rounded" id="btnInicioPCR">🤍 Inicio RCP</button>
+</div>
+<div class="mb-4 flex justify-between">
+<div class="text-center p-4 border-4 border-black w-1/2 mx-1">
+<p class="text-lg font-bold">Inicio caso</p>
+<p class="text-2xl" id="cronometroCaso">00:00</p>
+</div>
+<div class="text-center p-4 border-4 border-black w-1/2 mx-1">
+<p class="text-lg font-bold">Inicio PCR</p>
+<p class="text-2xl" id="cronometroPCR">00:00</p>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-2 mb-4">
+    <button class="accion bg-gray-300 p-3 rounded">¿Responde? ¿Respira?</button>
+    <button class="accion bg-gray-300 p-3 rounded">Desfibrilación</button>
+    <button class="accion bg-gray-300 p-3 rounded">Vía IV/IO</button>
+    <button class="accion bg-gray-300 p-3 rounded">Vía aérea</button>
+    <button class="accion bg-gray-300 p-3 rounded">Adrenalina</button>
+    <button class="accion bg-gray-300 p-3 rounded">Amiodarona</button>
+    <button class="accion bg-gray-300 p-3 rounded">Sulfato de magnesio</button>
+    <button class="accion bg-gray-300 p-3 rounded">Búsqueda de H y T</button>
+    <button class="accion bg-gray-300 p-3 rounded">Seguridad de la escena</button>
+    <button class="accion bg-gray-300 p-3 rounded">Cambio de reanimador</button>
+    <button class="accion bg-gray-300 p-3 rounded">Buena comunicación</button>
+    <button class="accion bg-gray-300 p-3 rounded">Inicio de compresiones</button>
+</div>
+<div class="mb-4">
+    <button id="btnMasAcciones" class="w-full bg-blue-500 text-white font-bold p-3 rounded mb-2">
+        Acciones adicionales ▼
+    </button>
+    <div id="accionesDesplegables" class="hidden grid grid-cols-2 gap-2">
+        <button class="accion bg-gray-300 p-3 rounded">Cardioversión</button>
+        <button class="accion bg-gray-300 p-3 rounded">Marcapasos</button>
+        <button class="accion bg-gray-300 p-3 rounded">Adenosina</button>
+        <button class="accion bg-gray-300 p-3 rounded">Verapamilo</button>
+        <button class="accion bg-gray-300 p-3 rounded">Diltiazem</button>
+        <button class="accion bg-gray-300 p-3 rounded">Amiodarona</button>
+        <button class="accion bg-gray-300 p-3 rounded">Procainamida</button>
+        <button class="accion bg-gray-300 p-3 rounded">Atropina</button>
+        <button class="accion bg-gray-300 p-3 rounded">Isoprenalina</button>
+    </div>
+</div>
+<textarea class="w-full border p-2 rounded" id="observaciones" placeholder="Observaciones..."></textarea>
+<div class="mt-4 flex flex-wrap gap-2">
+<button class="w-full bg-yellow-500 text-white font-bold p-3 rounded" id="btnFinalizar">Finalizar Caso</button>
+</div>
+</div>
+<!-- Vista de informe -->
+<div class="hidden" id="vistaInforme">
+<h2 class="text-xl font-bold mb-4">Informe del caso</h2>
+<div class="border p-4 rounded mb-4" id="contenidoInforme">
+<!-- Aquí se mostrará el informe -->
+</div>
+<div class="flex space-x-2">
+<button class="w-1/2 bg-green-600 text-white font-bold p-3 rounded" id="btnGuardar">Guardar Informe</button>
+<button class="w-1/2 bg-red-600 text-white font-bold p-3 rounded" id="btnDescartar">Descartar</button>
+</div>
+</div>
+<!-- Panel histórico -->
+<div class="hidden mt-4" id="vistaHistorico">
+<h2 class="text-xl font-bold mb-4">Histórico de informes</h2>
+<div class="max-h-60 overflow-y-auto" id="listaInformes"></div>
+<button class="w-full bg-blue-600 text-white font-bold p-3 rounded mt-4" id="btnNuevoCaso">Nuevo Caso</button>
+</div>
+<!-- Botones de importar/exportar -->
+<div class="mt-4 flex gap-2">
+<button class="bg-blue-500 text-white font-bold p-3 rounded" id="btnExportar">Exportar JSON</button>
+<input accept=".json" class="hidden" id="inputImportar" type="file"/>
+<button class="bg-orange-500 text-white font-bold p-3 rounded" id="btnImportar">Importar JSON</button>
+</div>
+</div>
+<script>
+        // Variables globales
+        let informes = JSON.parse(localStorage.getItem("informes")) || [];
+        let acciones = [];
+        let tiempoCaso = 0, tiempoPCR = 0, intervaloCaso, intervaloPCR;
+        let informeActual = null;
+        let horaPCR = null; // Nueva variable para almacenar la hora de inicio de PCR
+
+        // Elementos DOM
+        const formularioPrincipal = document.getElementById("formularioPrincipal");
+        const vistaInforme = document.getElementById("vistaInforme");
+        const vistaHistorico = document.getElementById("vistaHistorico");
+        const contenidoInforme = document.getElementById("contenidoInforme");
+        const listaInformes = document.getElementById("listaInformes");
+
+        // Cargar histórico al inicio
+        cargarHistorico();
+
+        // Iniciar cronómetro del caso
+        document.getElementById("btnInicioCaso").addEventListener("click", () => {
+            clearInterval(intervaloCaso);
+            intervaloCaso = setInterval(() => {
+                document.getElementById("cronometroCaso").textContent = formatearTiempo(++tiempoCaso);
+            }, 1000);
+        });
+
+        // Iniciar cronómetro de PCR
+        document.getElementById("btnInicioPCR").addEventListener("click", () => {
+            clearInterval(intervaloPCR);
+            intervaloPCR = setInterval(() => {
+                document.getElementById("cronometroPCR").textContent = formatearTiempo(++tiempoPCR);
+            }, 1000);
+            
+            // Guardar la hora exacta de inicio de PCR
+            horaPCR = new Date().toLocaleTimeString();
+            const hora = horaPCR;
+            acciones.push(`${hora} - Inicio de RCP`);
+        });
+
+        // Registrar acciones
+        document.querySelectorAll(".accion").forEach(btn => {
+            btn.addEventListener("click", () => {
+                let hora = new Date().toLocaleTimeString();
+                acciones.push(`${hora} - ${btn.textContent}`);
+                
+                // Mostrar confirmación visual
+                btn.classList.add("bg-green-300");
+                setTimeout(() => {
+                    btn.classList.remove("bg-green-300");
+                    btn.classList.add("bg-gray-300");
+                }, 300);
+            });
+        });
+
+        // Finalizar caso
+        document.getElementById("btnFinalizar").addEventListener("click", () => {
+            // Detener cronómetros
+            clearInterval(intervaloCaso);
+            clearInterval(intervaloPCR);
+            
+            // Crear informe
+            informeActual = {
+                fecha: document.getElementById("fecha").value,
+                alumnos: document.getElementById("alumnos").value,
+                centro: document.getElementById("centro").value,
+                curso: document.getElementById("curso").value,
+                grupo: document.getElementById("grupo").value,
+                briefing: document.getElementById("briefing").value,
+                observaciones: document.getElementById("observaciones").value,
+                acciones: [...acciones],
+                tiempoCaso: tiempoCaso,
+                tiempoPCR: tiempoPCR,
+                horaPCR: horaPCR, // Añadir la hora de inicio de PCR
+                timestamp: new Date().getTime()
+            };
+            
+            // Mostrar informe
+            mostrarInforme(informeActual);
+            
+            // Cambiar vista
+            formularioPrincipal.classList.add("hidden");
+            vistaInforme.classList.remove("hidden");
+        });
+
+        // Guardar informe
+        document.getElementById("btnGuardar").addEventListener("click", () => {
+            if (informeActual) {
+                informes.push(informeActual);
+                localStorage.setItem("informes", JSON.stringify(informes));
+                informeActual = null;
+                
+                // Mostrar histórico
+                cargarHistorico();
+                vistaInforme.classList.add("hidden");
+                vistaHistorico.classList.remove("hidden");
+            }
+        });
+
+        // Descartar informe
+        document.getElementById("btnDescartar").addEventListener("click", () => {
+            reiniciarFormulario();
+            vistaInforme.classList.add("hidden");
+            formularioPrincipal.classList.remove("hidden");
+        });
+
+        // Nuevo caso
+        document.getElementById("btnNuevoCaso").addEventListener("click", () => {
+            reiniciarFormulario();
+            vistaHistorico.classList.add("hidden");
+            formularioPrincipal.classList.remove("hidden");
+        });
+
+        // Exportar JSON
+        document.getElementById("btnExportar").addEventListener("click", () => {
+            if (informes.length === 0) {
+                alert("No hay informes para exportar");
+                return;
+            }
+            
+            const dataStr = JSON.stringify(informes, null, 2);
+            const blob = new Blob([dataStr], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `informes_acls_${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+
+        // Importar JSON
+        document.getElementById("btnImportar").addEventListener("click", () => {
+            document.getElementById("inputImportar").click();
+        });
+
+        document.getElementById("inputImportar").addEventListener("change", (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                try {
+                    const importedData = JSON.parse(event.target.result);
+                    if (Array.isArray(importedData)) {
+                        // Opción 1: Reemplazar todos los informes
+                        informes = importedData;
+                        // Opción 2: Añadir a los existentes
+                        // informes = [...informes, ...importedData];
+                        
+                        localStorage.setItem("informes", JSON.stringify(informes));
+                        cargarHistorico();
+                        vistaHistorico.classList.remove("hidden");
+                        formularioPrincipal.classList.add("hidden");
+                        vistaInforme.classList.add("hidden");
+                        alert(`Se han importado ${importedData.length} informes`);
+                    } else {
+                        alert("El archivo no tiene el formato correcto");
+                    }
+                } catch (error) {
+                    alert("Error al importar el archivo: " + error.message);
+                }
+            };
+            reader.readAsText(file);
+        });
+
+        // Funciones auxiliares
+        function formatearTiempo(segundos) {
+            const minutos = Math.floor(segundos / 60);
+            const segs = segundos % 60;
+            return `${String(minutos).padStart(2, '0')}:${String(segs).padStart(2, '0')}`;
+        }
+
+        function mostrarInforme(informe) {
+            let html = `
+                <div class="space-y-2">
+                    <p><strong>Fecha:</strong> ${informe.fecha || "No especificada"}</p>
+                    <p><strong>Alumnos:</strong> ${informe.alumnos || "No especificados"}</p>
+                    <p><strong>Centro:</strong> ${informe.centro || "No especificado"}</p>
+                    <p><strong>Curso:</strong> ${informe.curso || "No especificado"}</p>
+                    <p><strong>Grupo:</strong> ${informe.grupo || "No especificado"}</p>
+                    <p><strong>Briefing:</strong> ${informe.briefing || "No especificado"}</p>
+                    <p><strong>Tiempo total del caso:</strong> ${formatearTiempo(informe.tiempoCaso)}</p>
+                    <p><strong>Tiempo total de PCR:</strong> ${formatearTiempo(informe.tiempoPCR)}</p>
+                    ${informe.horaPCR ? `<p><strong>Hora de inicio de PCR:</strong> ${informe.horaPCR}</p>` : ''}
+                    <p><strong>Observaciones:</strong> ${informe.observaciones || "Ninguna"}</p>
+                    <p><strong>Acciones registradas:</strong></p>
+                    <ul class="list-disc pl-5">
+                        ${informe.acciones.map(accion => `<li>${accion}</li>`).join("")}
+                    </ul>
+                </div>
+            `;
+            contenidoInforme.innerHTML = html;
+        }
+
+        function cargarHistorico() {
+            listaInformes.innerHTML = "";
+            if (informes.length === 0) {
+                listaInformes.innerHTML = "<p class='text-center py-4'>No hay informes guardados</p>";
+                return;
+            }
+            
+            // Ordenar por fecha (más reciente primero)
+            informes.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+            
+            informes.forEach((informe, index) => {
+                const fecha = informe.fecha || "Sin fecha";
+                const alumnos = informe.alumnos || "Sin alumnos";
+                const elementoInforme = document.createElement("div");
+                elementoInforme.className = "border p-3 mb-2 rounded cursor-pointer hover:bg-gray-100";
+                elementoInforme.innerHTML = `
+                    <div class="flex justify-between">
+                        <div>
+                            <p class="font-bold">${fecha} - ${alumnos}</p>
+                            <p class="text-sm">${informe.centro || "Sin centro"} - ${informe.curso || "Sin curso"}</p>
+                        </div>
+                        <button class="text-red-600 hover:text-red-800" data-index="${index}">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                `;
+                
+                // Evento para ver el informe
+                elementoInforme.addEventListener("click", (e) => {
+                    // Evitar que el click en el botón de eliminar abra el informe
+                    if (e.target.closest("button")) return;
+                    
+                    mostrarInforme(informe);
+                    vistaHistorico.classList.add("hidden");
+                    vistaInforme.classList.remove("hidden");
+                    informeActual = null; // Para evitar que se guarde de nuevo
+                    
+                    // Reemplazar botones por uno de volver
+                    document.getElementById("btnGuardar").classList.add("hidden");
+                    document.getElementById("btnDescartar").classList.add("hidden");
+                    
+                    // Si no existe el botón de volver, lo creamos
+                    if (!document.getElementById("btnVolver")) {
+                        const btnVolver = document.createElement("button");
+                        btnVolver.id = "btnVolver";
+                        btnVolver.className = "w-full bg-blue-600 text-white font-bold p-3 rounded";
+                        btnVolver.textContent = "Volver al histórico";
+                        btnVolver.addEventListener("click", () => {
+                            vistaInforme.classList.add("hidden");
+                            vistaHistorico.classList.remove("hidden");
+                            document.getElementById("btnGuardar").classList.remove("hidden");
+                            document.getElementById("btnDescartar").classList.remove("hidden");
+                            btnVolver.remove();
+                        });
+                        document.querySelector("#vistaInforme .flex").appendChild(btnVolver);
+                    }
+                });
+                
+                // Evento para eliminar el informe
+                elementoInforme.querySelector("button").addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    if (confirm("¿Estás seguro de que quieres eliminar este informe?")) {
+                        informes.splice(index, 1);
+                        localStorage.setItem("informes", JSON.stringify(informes));
+                        cargarHistorico();
+                    }
+                });
+                
+                listaInformes.appendChild(elementoInforme);
+            });
+        }
+
+        function reiniciarFormulario() {
+            // Limpiar el formulario
+            document.getElementById("fecha").value = "";
+            document.getElementById("alumnos").value = "";
+            document.getElementById("centro").value = "";
+            document.getElementById("curso").value = "";
+            document.getElementById("grupo").value = "";
+            document.getElementById("briefing").value = "";
+            document.getElementById("observaciones").value = "";
+            
+            // Reiniciar cronómetros
+            clearInterval(intervaloCaso);
+            clearInterval(intervaloPCR);
+            tiempoCaso = 0;
+            tiempoPCR = 0;
+            document.getElementById("cronometroCaso").textContent = "00:00";
+            document.getElementById("cronometroPCR").textContent = "00:00";
+            
+            // Reiniciar acciones
+            acciones = [];
+            
+            // Reiniciar hora de PCR
+            horaPCR = null;
+            
+            // Reiniciar informe actual
+            informeActual = null;
+        }
+
+        // Add event listener for the "Acciones adicionales" button
+        document.getElementById("btnMasAcciones").addEventListener("click", () => {
+            const accionesDesplegables = document.getElementById("accionesDesplegables");
+            accionesDesplegables.classList.toggle("hidden");
+            
+            // Update button text
+            const btnMasAcciones = document.getElementById("btnMasAcciones");
+            if (accionesDesplegables.classList.contains("hidden")) {
+                btnMasAcciones.textContent = "Acciones adicionales ▼";
+            } else {
+                btnMasAcciones.textContent = "Ocultar acciones ▲";
+            }
+        });
+        // Add event listeners to new action buttons to match existing buttons' functionality
+        document.querySelectorAll("#accionesDesplegables .accion").forEach(btn => {
+            btn.addEventListener("click", () => {
+                let hora = new Date().toLocaleTimeString();
+                acciones.push(`${hora} - ${btn.textContent}`);
+                
+                // Mostrar confirmación visual
+                btn.classList.add("bg-green-300");
+                setTimeout(() => {
+                    btn.classList.remove("bg-green-300");
+                    btn.classList.add("bg-gray-300");
+                }, 300);
+            });
+        });
+    </script>
+<script>
+document.addEventListener('contextmenu', e => e.preventDefault());
+document.addEventListener('selectstart', e => e.preventDefault());
+
+if (document.referrer && !document.referrer.includes("urgenciasyemergen.com")) {
+    document.body.innerHTML = "<div style='text-align:center; padding: 50px; font-family:sans-serif;'>Acceso no autorizado.</div>";
+}
+</script></body>
+</html>
