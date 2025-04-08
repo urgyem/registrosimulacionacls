@@ -9,6 +9,28 @@
 <body class="bg-gray-100 p-4">
 <div class="max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-6">
 <h1 class="text-2xl font-bold text-center mb-2" style="color: #be1520;">Registro de casos de simulación ACLS</h1><p class="text-center text-sm text-gray-600 mb-4">APP creada por Elena Plaza Moreno - Urgencias y Emergencias® - <a class="text-blue-600 underline" href="https://www.urgenciasyemergen.com" target="_blank">www.urgenciasyemergen.com</a></p>
+<!-- Botón de instrucciones -->
+<div class="mb-4">
+    <button id="btnInstrucciones" class="w-full bg-cyan-600 text-white font-bold p-3 rounded mb-2">
+        Instrucciones de uso ▼
+    </button>
+    <div id="panelInstrucciones" class="hidden border p-4 rounded mb-4 bg-cyan-50">
+        <h3 class="font-bold text-lg mb-2">¿Cómo usar esta aplicación?</h3>
+        <ol class="list-decimal pl-5 space-y-2">
+            <li>Completa los datos del <strong>formulario principal</strong> (fecha, alumnos, centro, etc.)</li>
+            <li>Pulsa <strong>▶️ Iniciar caso</strong> para comenzar el cronómetro principal que controla la duración total del caso.</li>
+            <li>Cuando comience la PCR, pulsa <strong>🤍 Inicio PCR</strong> para iniciar ese cronómetro específico de parada.</li>
+            <li>Utiliza los <strong>botones de acción</strong> durante la simulación para registrar cada intervención que realice el alumnado. Cada vez que pulses un botón, se registrará la hora y la acción realizada.</li>
+            <li>Para acceder a acciones adicionales -en casos de taquicardia y bradicardia-, pulsa el botón <strong>Acciones adicionales</strong>.</li>
+            <li>Añade cualquier <strong>observación</strong> relevante en el campo correspondiente.</li>
+            <li>Al finalizar, pulsa <strong>Finalizar Caso</strong> para generar el informe.</li>
+            <li>Revisa el informe y pulsa <strong>Guardar Informe</strong> o <strong>Descartar</strong>.</li>
+            <li>Todos los informes guardados aparecerán en el <strong>Histórico</strong>, donde podrás consultarlos o eliminarlos.</li>
+            <li>Puedes <strong>Exportar</strong> todos tus informes en formato JSON para hacer copia de seguridad o <strong>Importar</strong> informes previamente guardados.</li>
+        </ol>
+        <p class="mt-3 font-semibold">Nota: Los datos se guardan localmente en tu dispositivo. Puedes perderlos al borrar al historial, así que realiza una copia de seguridad antes. Ten en cuenta que no tendrás los registros si usas estas APP en otro ordenador.</p>
+    </div>
+</div>
 <!-- Formulario principal -->
 <div id="formularioPrincipal">
 <div class="mb-4">
@@ -112,6 +134,20 @@
         const vistaHistorico = document.getElementById("vistaHistorico");
         const contenidoInforme = document.getElementById("contenidoInforme");
         const listaInformes = document.getElementById("listaInformes");
+
+        // Toggle para el panel de instrucciones
+        document.getElementById("btnInstrucciones").addEventListener("click", () => {
+            const panelInstrucciones = document.getElementById("panelInstrucciones");
+            panelInstrucciones.classList.toggle("hidden");
+            
+            // Actualizar texto del botón
+            const btnInstrucciones = document.getElementById("btnInstrucciones");
+            if (panelInstrucciones.classList.contains("hidden")) {
+                btnInstrucciones.textContent = "Instrucciones de uso ▼";
+            } else {
+                btnInstrucciones.textContent = "Ocultar instrucciones ▲";
+            }
+        });
 
         // Cargar histórico al inicio
         cargarHistorico();
